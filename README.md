@@ -1,26 +1,26 @@
 Brain Tumor Segmentation Using 3D U-Net
 
-This project focuses on automated brain tumor segmentation using MRI scans from the BraTS dataset. It uses a 3D U-Net architecture to segment tumor regions from multimodal MRI volumes. Due to hardware limitations, the project is currently scaled down but designed so that performance can significantly improve on a higher-end system.
+This project implements a complete deep learning pipeline for brain tumor segmentation using 3D MRI scans from the BraTS dataset. The goal is to automatically segment tumor regions from volumetric medical images using a 3D U-Net architecture. Due to hardware limitations, the project was developed using reduced input sizes and fewer samples, but the pipeline is scalable for higher-end systems.
 
-Project Overview
+🔍 Overview
 
-Brain tumor segmentation is a critical task in medical imaging. Manual annotation is time-consuming and requires expert knowledge. This project develops an end-to-end deep learning pipeline capable of:
+Brain tumor segmentation is a critical task in medical imaging and clinical diagnosis. Manual annotation of 3D MRI data is slow and requires specialist expertise. This project provides:
 
-Loading and preprocessing MRI volumes
+A preprocessing pipeline for 3D MRI volumes
 
-Normalizing and resizing 3D medical images
+A 3D U-Net model for voxel-level segmentation
 
-Training a 3D U-Net for voxel-wise segmentation
+Training and validation loops with data generators
 
-Evaluating predictions using Dice coefficient
+Evaluation using Dice coefficient
 
-Visualizing input slices, ground truth, and model outputs
+Visualization of input slices, masks, and predictions across multiple slices
 
-The primary objective is to create a baseline segmentation model that can be improved and scaled up with better hardware.
+The project serves as a baseline framework that can be expanded, improved, and fully trained on powerful GPU hardware.
 
-Dataset
+📂 Dataset: BraTS
 
-The project uses the BraTS (Brain Tumor Segmentation) dataset, which contains multimodal MRI scans including:
+This project uses the BraTS dataset, which includes multimodal MRI scans:
 
 FLAIR
 
@@ -30,130 +30,153 @@ T1ce
 
 T2
 
-Each scan includes a corresponding mask for tumor segmentation.
-For hardware reasons, only one modality (FLAIR) and a reduced number of samples were used during development.
+Each sample includes a segmentation mask with tumor regions annotated.
+For hardware practicality, the prototype uses:
 
-Preprocessing
+Only FLAIR modality
 
-Key preprocessing steps:
+A reduced subset of samples
 
-Loading NIfTI files
+Downscaled 3D volumes
 
-Cropping or resizing volumes to fixed dimensions
+🧼 Preprocessing
 
-Intensity normalization
+The preprocessing pipeline includes:
 
-Creating data generators for efficient training
+Loading .nii.gz NIfTI MRI volumes
 
-Splitting data into training, validation, and testing sets
+Cropping or resizing to fixed input dimensions
 
-Model Architecture
+Normalizing intensity values
 
-A modified 3D U-Net is used:
+Creating TensorFlow/Keras data generators
 
-Encoder with 3D convolutions and max pooling
+Splitting into training, validation, and test sets
 
-Decoder with transposed convolutions for upsampling
+This ensures memory-efficient loading and training.
 
-Skip connections to preserve spatial information
+🏗️ Model Architecture: 3D U-Net
 
-Sigmoid output for binary segmentation
+The implemented 3D U-Net includes:
 
-Training
+3D convolutional encoder
 
-Training includes:
+Bottleneck with deeper feature maps
 
-Binary cross-entropy and Dice loss
+3D transposed convolution decoder
+
+Skip connections to preserve spatial features
+
+Sigmoid activation for binary segmentation
+
+The model is lightweight to accommodate limited GPU memory.
+
+🏋️ Training
+
+Training uses:
+
+Dice + Binary Cross-Entropy loss
 
 Adam optimizer
 
-Batch size adjusted due to GPU limitations
+Small batch size (hardware constraint)
 
-Real-time data loading via generators
+Reduced epochs
 
-Because of hardware constraints, the model is trained on reduced 3D dimensions and fewer samples, resulting in lower accuracy but a working prototype pipeline.
+Real-time data loading
 
-Evaluation
+Despite limitations, the model learns the basic structure of tumor regions.
 
-Metrics used:
+📊 Evaluation
+
+Metrics include:
 
 Dice coefficient
 
 Binary accuracy
 
-Visual inspection of slices
+The project supports visualization of:
 
-Visualization code allows comparison of:
+Input MRI slices
 
-Input MRI slice
+Ground truth masks
 
-Ground truth mask
+Prediction outputs (multiple slices or entire volume)
 
-Predicted segmentation
+📈 Results
 
-Multiple slice visualization across the volume is also supported.
+The model successfully performs basic tumor segmentation but with reduced accuracy due to:
 
-Results
+Limited dataset size
 
-The prototype model is able to detect tumor regions but with limited precision due to:
+Downscaled image resolution
 
-Small dataset portion
+Small batch size
 
-Low input resolution
+Short training duration
 
-Limited training time
+The framework is fully functional and ready to scale up.
 
-Restricted batch size
+⚠️ Limitations
 
-However, the pipeline works end-to-end and is ready for scaling.
+Because of hardware limitations (low VRAM, limited compute):
 
-Limitations and Improvements
+Only single-modality FLAIR was used
 
-With better GPU hardware, the following improvements can be implemented:
+Full-resolution 3D volumes could not be processed
 
-Using full-resolution BraTS volumes
+Model depth and batch size were reduced
 
-Training on all MRI modalities
+Training was limited to fewer epochs
 
-Larger batch sizes and deeper networks
+🚀 Future Improvements (With Better Hardware)
 
-More epochs for better convergence
+With a more powerful GPU, the following enhancements are possible:
+
+Full-resolution BraTS input (240×240×155)
+
+Multi-modal MRI (FLAIR, T1, T1ce, T2)
+
+Larger and deeper 3D U-Net
 
 Data augmentation
 
-Advanced architectures like Attention U-Net or nnU-Net
+Longer training for better convergence
 
-Post-processing methods such as CRFs or morphological operations
+Advanced architectures (Attention U-Net, Residual U-Net, nnU-Net)
 
-Installation
+Post-processing to refine segmentation
 
-Python 3.8 or higher recommended. Install dependencies:
+These changes would significantly boost performance.
 
+🛠️ Installation
 pip install tensorflow numpy nibabel matplotlib scikit-image
 
-Usage
+▶️ Usage
 
-Place dataset in the specified directory
+Place MRI volumes and masks inside data/images/ and data/masks/.
 
-Run preprocessing script
+Run the preprocessing script.
 
-Train the model
+Train the model using train.py.
 
-Visualize predictions
+View predictions using visualize.py.
 
-Evaluate performance
-
-Folder Structure
+📁 Project Structure
 project/
-  data/
-      images/
-      masks/
-  src/
-      preprocessing.py
-      model.py
-      train.py
-      visualize.py
-  outputs/
-      predictions/
-      logs/
-README.md
+│
+├── data/
+│   ├── images/
+│   └── masks/
+│
+├── src/
+│   ├── preprocessing.py
+│   ├── model.py
+│   ├── train.py
+│   └── visualize.py
+│
+├── outputs/
+│   ├── logs/
+│   └── predictions/
+│
+└── README.md

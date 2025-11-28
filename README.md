@@ -36,6 +36,17 @@ Each scan includes a corresponding tumor segmentation mask.
 
 Note: For hardware efficiency, training uses reduced 3D patches and a subset of the dataset. This ensures the pipeline works without crashing on systems with limited RAM or GPU memory.
 
+4️⃣ Provide instructions for users to download datasets
+
+Instead of including kaggle.json, in your README, tell users how to create their own API key:
+
+**Dataset Download Instructions**
+
+1. Create a Kaggle account.
+2. Go to Account → API → Create New API Token.
+3. Place the downloaded `kaggle.json` file in your working directory.
+4. Run the provided preprocessing script to load data.
+
 🔄 Preprocessing
 
 Steps included in preprocessing:
